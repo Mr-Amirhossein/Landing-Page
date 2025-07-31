@@ -17,7 +17,8 @@ import {
   Linkedin,
   Twitter,
   Instagram,
-  Sparkles
+  Sparkles,
+  Loader2
 } from 'lucide-react'
 import { useLanguage } from '@/contexts/language-context'
 import { Button } from '@/components/ui/button'
@@ -40,19 +41,79 @@ export function ContactSection() {
   })
   
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [errors, setErrors] = useState<{[key: string]: string}>({})
   
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = () => {
+    const newErrors: {[key: string]: string} = {}
+    
+    if (!formData.name.trim()) {
+      newErrors.name = 'Name is required'
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = 'Email is required'
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address'
+    }
+    
+    if (!formData.message.trim()) {
+      newErrors.message = 'Message is required'
+    } else if (formData.message.trim().length < 10) {
+      newErrors.message = 'Message must be at least 10 characters long'
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+  
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission here
-    setIsSubmitted(true)
-    setTimeout(() => setIsSubmitted(false), 3000)
+    
+    if (!validateForm()) {
+      return
+    }
+    
+    setIsSubmitting(true)
+    setErrors({})
+    
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      setIsSubmitted(true)
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        company: '',
+        message: ''
+      })
+      
+      setTimeout(() => {
+        setIsSubmitted(false)
+      }, 5000)
+    } catch {
+      setErrors({ general: 'Failed to send message. Please try again.' })
+    } finally {
+      setIsSubmitting(false)
+    }
   }
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
     setFormData(prev => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [name]: value
     }))
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
+    }
   }
   
   const contactInfo = [
@@ -137,6 +198,12 @@ export function ContactSection() {
               </h3>
               
               <form onSubmit={handleSubmit} className="space-y-6">
+                {errors.general && (
+                  <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-sm">
+                    {errors.general}
+                  </div>
+                )}
+                
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
@@ -146,9 +213,14 @@ export function ContactSection() {
                       placeholder={t('contactName')}
                       value={formData.name}
                       onChange={handleChange}
-                      className="pl-12 h-14 glass-effect border-primary/20 focus:border-primary rounded-xl"
+                      className={`pl-12 h-14 glass-effect border-primary/20 focus:border-primary rounded-xl ${
+                        errors.name ? 'border-red-500/50 focus:border-red-500' : ''
+                      }`}
                       required
                     />
+                    {errors.name && (
+                      <p className="text-red-500 text-sm mt-1">{errors.name}</p>
+                    )}
                   </div>
                   
                   <div className="relative">
@@ -159,9 +231,14 @@ export function ContactSection() {
                       placeholder={t('contactEmail')}
                       value={formData.email}
                       onChange={handleChange}
-                      className="pl-12 h-14 glass-effect border-primary/20 focus:border-primary rounded-xl"
+                      className={`pl-12 h-14 glass-effect border-primary/20 focus:border-primary rounded-xl ${
+                        errors.email ? 'border-red-500/50 focus:border-red-500' : ''
+                      }`}
                       required
                     />
+                    {errors.email && (
+                      <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                    )}
                   </div>
                 </div>
                 
@@ -199,21 +276,31 @@ export function ContactSection() {
                     value={formData.message}
                     onChange={handleChange}
                     rows={6}
-                    className="pl-12 pt-6 glass-effect border-primary/20 focus:border-primary rounded-xl resize-none"
+                    className={`pl-12 pt-6 glass-effect border-primary/20 focus:border-primary rounded-xl resize-none ${
+                      errors.message ? 'border-red-500/50 focus:border-red-500' : ''
+                    }`}
                     required
                   />
+                  {errors.message && (
+                    <p className="text-red-500 text-sm mt-1">{errors.message}</p>
+                  )}
                 </div>
                 
                 <Button
                   type="submit"
                   size="lg"
-                  className="w-full magnetic-button gradient-primary text-white font-semibold py-4 text-lg rounded-xl shadow-elevation-3 hover:shadow-glow"
-                  disabled={isSubmitted}
+                  className="w-full magnetic-button gradient-primary text-white font-semibold py-4 text-lg rounded-xl shadow-elevation-3 hover:shadow-glow disabled:opacity-50 disabled:cursor-not-allowed"
+                  disabled={isSubmitted || isSubmitting}
                 >
                   {isSubmitted ? (
                     <>
                       <CheckCircle className="mr-2 h-5 w-5" />
                       Message Sent!
+                    </>
+                  ) : isSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Sending...
                     </>
                   ) : (
                     <>

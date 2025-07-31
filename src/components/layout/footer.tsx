@@ -15,11 +15,13 @@ import {
   ArrowRight,
   Award,
   Shield,
-  Clock
+  Clock,
+  CheckCircle
 } from 'lucide-react'
 import { useLanguage } from '@/contexts/language-context'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { Logo } from '@/components/ui/logo'
 
 export function Footer() {
   const { t } = useLanguage()
@@ -94,9 +96,9 @@ export function Footer() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Main Footer Content */}
         <div className="py-16 lg:py-20">
-          <div className="grid lg:grid-cols-12 gap-12">
+          <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
             {/* Company Info */}
-            <div className="lg:col-span-4">
+            <div className="lg:col-span-3">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -104,18 +106,8 @@ export function Footer() {
                 viewport={{ once: true }}
               >
                 {/* Logo */}
-                <Link href="/" className="inline-flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 gradient-primary rounded-xl flex items-center justify-center shadow-elevation-2">
-                    <span className="text-white font-bold text-xl">C</span>
-                  </div>
-                  <div>
-                    <span className="text-2xl font-bold text-foreground">
-                      {t('companyName')}
-                    </span>
-                    <p className="text-xs text-muted-foreground">
-                      Global Construction Solutions
-                    </p>
-                  </div>
+                <Link href="/" className="inline-block mb-6">
+                  <Logo size="md" showText={true} animated={false} />
                 </Link>
                 
                 <p className="text-muted-foreground leading-relaxed mb-6">
@@ -159,8 +151,8 @@ export function Footer() {
             </div>
             
             {/* Links Sections */}
-            <div className="lg:col-span-6">
-              <div className="grid md:grid-cols-4 gap-8">
+            <div className="lg:col-span-5">
+              <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 lg:gap-8">
                 {Object.entries(footerSections).map(([key, section], index) => (
                   <motion.div
                     key={key}
@@ -191,63 +183,72 @@ export function Footer() {
             </div>
             
             {/* Newsletter */}
-            <div className="lg:col-span-2">
+            <div className="lg:col-span-4">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
                 viewport={{ once: true }}
-                className="glass-effect rounded-2xl p-6"
+                className="glass-effect rounded-2xl p-6 lg:p-8 h-full"
               >
-                <h3 className="font-semibold text-foreground mb-2">
+                <h3 className="text-lg lg:text-xl font-semibold text-foreground mb-3">
                   {t('footerNewsletter')}
                 </h3>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="text-sm lg:text-base text-muted-foreground mb-6">
                   {t('footerNewsletterDesc')}
                 </p>
                 
-                <form onSubmit={handleNewsletterSubmit} className="space-y-3">
-                  <div className="relative">
+                <form onSubmit={handleNewsletterSubmit} className="space-y-4">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <Input
                       type="email"
-                      placeholder="Enter your email"
+                      placeholder="Enter your email address"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="h-12 pr-12 glass-effect border-primary/20 focus:border-primary rounded-xl"
+                      className="flex-1 h-12 glass-effect border-primary/20 focus:border-primary rounded-xl px-4"
                       required
                     />
                     <Button
                       type="submit"
-                      size="sm"
-                      className="absolute right-1 top-1 h-10 w-10 p-0 gradient-primary rounded-lg"
+                      size="lg"
+                      className="gradient-primary hover:shadow-glow text-white font-semibold px-6 h-12 rounded-xl whitespace-nowrap"
                       disabled={isSubscribed}
                     >
-                      <Send className="w-4 h-4" />
+                      <Send className="w-4 h-4 mr-2" />
+                      {t('footerSubscribe')}
                     </Button>
                   </div>
                   {isSubscribed && (
-                    <p className="text-xs text-green-500">
-                      Successfully subscribed!
-                    </p>
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="flex items-center gap-2 text-green-500 text-sm"
+                    >
+                      <CheckCircle className="w-4 h-4" />
+                      <span>Successfully subscribed to our newsletter!</span>
+                    </motion.div>
                   )}
                 </form>
                 
                 {/* Social Links */}
-                <div className="flex gap-3 mt-6">
-                  {socialLinks.map((social, index) => {
-                    const Icon = social.icon
-                    return (
-                      <motion.a
-                        key={index}
-                        href={social.href}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.95 }}
-                        className={`w-10 h-10 glass-effect rounded-lg flex items-center justify-center text-muted-foreground transition-colors ${social.color}`}
-                      >
-                        <Icon className="w-4 h-4" />
-                      </motion.a>
-                    )
-                  })}
+                <div className="pt-6 mt-6 border-t border-border/50">
+                  <p className="text-sm text-muted-foreground mb-4">Follow us on social media</p>
+                  <div className="flex gap-3">
+                    {socialLinks.map((social, index) => {
+                      const Icon = social.icon
+                      return (
+                        <motion.a
+                          key={index}
+                          href={social.href}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          className={`w-10 h-10 glass-effect rounded-lg flex items-center justify-center text-muted-foreground transition-colors ${social.color}`}
+                        >
+                          <Icon className="w-4 h-4" />
+                        </motion.a>
+                      )
+                    })}
+                  </div>
                 </div>
               </motion.div>
             </div>

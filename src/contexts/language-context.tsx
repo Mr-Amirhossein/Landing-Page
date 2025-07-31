@@ -254,10 +254,15 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     // Update HTML attributes
     document.documentElement.lang = language
-    document.documentElement.dir = language === 'fa' ? 'rtl' : 'ltr'
+    // Don't change document direction globally - only apply to specific text elements
     
     // Save language preference
     localStorage.setItem('civilaris-language', language)
+    
+    // Update font family based on language
+    document.body.style.fontFamily = language === 'fa' 
+      ? 'var(--font-vazirmatn), Vazirmatn, Tahoma, Arial, sans-serif'
+      : 'var(--font-inter), Inter, system-ui, sans-serif'
   }, [language])
   
   const t = (key: string): string => {

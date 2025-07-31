@@ -1,0 +1,153 @@
+{
+  "name": "Civilaris Language Analytics",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "language-change",
+        "options": {}
+      },
+      "id": "webhook-1",
+      "name": "Language Change Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "webhookId": "language-change"
+    },
+    {
+      "parameters": {
+        "functionCode": "// Extract and format the data\nconst event = $input.first().json.event;\nconst data = $input.first().json.data;\nconst timestamp = $input.first().json.timestamp;\n\n// Format for Google Sheets\nreturn [\n  {\n    json: {\n      timestamp: timestamp,\n      event: event,\n      previousLanguage: data.previousLanguage || '',\n      newLanguage: data.newLanguage || data.language,\n      url: data.url,\n      userAgent: data.userAgent,\n      screenResolution: data.screenResolution || '',\n      viewport: data.viewport || '',\n      timezone: data.timezone || '',\n      theme: data.preferences?.theme || '',\n      referrer: data.referrer || ''\n    }\n  }\n];"
+      },
+      "id": "function-1",
+      "name": "Format Data",
+      "type": "n8n-nodes-base.function",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "operation": "append",
+        "sheetId": "YOUR_SHEET_ID",
+        "range": "A:K",
+        "options": {}
+      },
+      "id": "sheets-1",
+      "name": "Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.event}}",
+              "value2": "language_changed"
+            }
+          ]
+        }
+      },
+      "id": "if-1",
+      "name": "IF Language Changed",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#analytics",
+        "text": "🌐 Language Change Alert\n\nUser switched from *{{$json.previousLanguage}}* to *{{$json.newLanguage}}*\n\nPage: {{$json.url}}\nTime: {{$json.timestamp}}",
+        "otherOptions": {}
+      },
+      "id": "slack-1",
+      "name": "Slack Notification",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 1,
+      "position": [1050, 200]
+    },
+    {
+      "parameters": {
+        "url": "={{$env.CRM_API_URL}}/contacts/update",
+        "method": "POST",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "language",
+              "value": "={{$json.newLanguage}}"
+            },
+            {
+              "name": "lastActivity",
+              "value": "={{$json.timestamp}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "http-1",
+      "name": "Update CRM",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 400]
+    }
+  ],
+  "connections": {
+    "Language Change Webhook": {
+      "main": [
+        [
+          {
+            "node": "Format Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Data": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "IF Language Changed",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "IF Language Changed": {
+      "main": [
+        [
+          {
+            "node": "Slack Notification",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Update CRM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {},
+  "id": "civilaris-language-analytics"
+}

@@ -8,6 +8,7 @@ import { useLanguage } from '@/contexts/language-context'
 import { ThemeToggle } from '@/components/ui/theme-toggle'
 import { LanguageToggle } from '@/components/language-toggle'
 import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/ui/logo'
 import { cn } from '@/lib/utils'
 
 const navigation = [
@@ -60,25 +61,8 @@ export function Header() {
       <nav className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-20 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3 group">
-            <motion.div 
-              className="relative w-12 h-12"
-              whileHover={{ scale: 1.1, rotate: 5 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <div className="absolute inset-0 gradient-primary rounded-xl shadow-glow" />
-              <div className="relative flex items-center justify-center h-full text-white font-bold text-xl">
-                C
-              </div>
-            </motion.div>
-            <div>
-              <span className="text-xl font-bold text-foreground font-poppins">
-                {t('companyName')}
-              </span>
-              <p className="text-xs text-muted-foreground font-medium hidden sm:block">
-                Global Construction Solutions
-              </p>
-            </div>
+          <Link href="/" className="group">
+            <Logo size="md" showText={true} animated={true} />
           </Link>
 
           {/* Desktop Navigation */}

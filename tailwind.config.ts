@@ -50,14 +50,32 @@ module.exports = {
                     DEFAULT: "hsl(var(--card))",
                     foreground: "hsl(var(--card-foreground))",
                 },
+                success: {
+                    DEFAULT: "hsl(var(--success))",
+                    foreground: "hsl(var(--success-foreground))",
+                },
+                warning: {
+                    DEFAULT: "hsl(var(--warning))",
+                    foreground: "hsl(var(--warning-foreground))",
+                },
+                surface: {
+                    primary: "hsl(var(--surface-primary))",
+                    secondary: "hsl(var(--surface-secondary))",
+                    tertiary: "hsl(var(--surface-tertiary))",
+                },
+                shadow: {
+                    light: "hsl(var(--shadow-light))",
+                    medium: "hsl(var(--shadow-medium))",
+                    strong: "hsl(var(--shadow-strong))",
+                },
                 civilaris: {
                     dark: "#0f172a",
-                    gold: "#e6b800",
-                    goldLight: "#f4d03f",
-                    goldDark: "#b8961f",
-                    blue: "#3b82f6",
-                    blueLight: "#60a5fa",
-                    blueDark: "#1d4ed8",
+                    gold: "#ffd942",
+                    goldLight: "#ffed4e",
+                    goldDark: "#d4af37",
+                    blue: "#60a5fa",
+                    blueLight: "#7dd3fc",
+                    blueDark: "#3b82f6",
                 }
             },
             borderRadius: {

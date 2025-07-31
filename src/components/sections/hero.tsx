@@ -6,6 +6,7 @@ import { ArrowRight, Play, ChevronDown, Sparkles } from 'lucide-react'
 import { useLanguage } from '@/contexts/language-context'
 import { Button } from '@/components/ui/button'
 import { GoldenSphere } from '@/components/golden-sphere'
+import { HeroLogo } from '@/components/ui/logo'
 
 export function HeroSection() {
   const { t } = useLanguage()
@@ -31,7 +32,10 @@ export function HeroSection() {
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 gradient-primary rounded-full blur-3xl opacity-20"
+          className="absolute top-1/4 left-1/4 w-32 h-32 sm:w-48 sm:h-48 lg:w-64 lg:h-64 rounded-full blur-3xl"
+          style={{
+            background: `radial-gradient(circle, rgba(255, 237, 78, 0.25) 0%, rgba(244, 208, 63, 0.15) 50%, transparent 80%)`
+          }}
         />
         <motion.div
           animate={{
@@ -45,7 +49,10 @@ export function HeroSection() {
             ease: "easeInOut",
             delay: 5,
           }}
-          className="absolute top-1/3 right-1/3 w-24 h-24 sm:w-36 sm:h-36 lg:w-48 lg:h-48 gradient-accent rounded-full blur-3xl opacity-15"
+          className="absolute top-1/3 right-1/3 w-24 h-24 sm:w-36 sm:h-36 lg:w-48 lg:h-48 rounded-full blur-3xl"
+          style={{
+            background: `radial-gradient(circle, rgba(125, 211, 252, 0.2) 0%, rgba(96, 165, 250, 0.1) 50%, transparent 80%)`
+          }}
         />
         
         {/* Floating Glass Cards */}
@@ -60,6 +67,9 @@ export function HeroSection() {
             ease: "easeInOut",
           }}
           className="absolute top-1/4 right-1/4 w-20 h-12 sm:w-28 sm:h-16 lg:w-32 lg:h-20 glass-effect rounded-2xl hidden sm:block"
+          style={{
+            boxShadow: `0 8px 32px rgba(255, 237, 78, 0.1)`
+          }}
         />
         <motion.div
           animate={{
@@ -73,6 +83,9 @@ export function HeroSection() {
             delay: 2,
           }}
           className="absolute bottom-1/3 left-1/3 w-16 h-10 sm:w-20 sm:h-12 lg:w-24 lg:h-16 glass-effect rounded-xl hidden sm:block"
+          style={{
+            boxShadow: `0 8px 32px rgba(125, 211, 252, 0.1)`
+          }}
         />
       </div>
       
@@ -92,12 +105,20 @@ export function HeroSection() {
               <motion.div
                 animate={{ rotate: 360 }}
                 transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                className="absolute -inset-8 border border-primary/20 rounded-full"
+                className="absolute -inset-8 rounded-full"
+                style={{
+                  border: `1px solid rgba(255, 237, 78, 0.25)`,
+                  boxShadow: `0 0 30px rgba(255, 237, 78, 0.1)`
+                }}
               />
               <motion.div
                 animate={{ rotate: -360 }}
                 transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-                className="absolute -inset-16 border border-accent/10 rounded-full"
+                className="absolute -inset-16 rounded-full"
+                style={{
+                  border: `1px solid rgba(125, 211, 252, 0.15)`,
+                  boxShadow: `0 0 40px rgba(96, 165, 250, 0.08)`
+                }}
               />
             </div>
           </motion.div>
@@ -114,32 +135,15 @@ export function HeroSection() {
                 initial={{ opacity: 0, scale: 0.8 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-premium mb-6"
               >
                 <Sparkles className="w-4 h-4 text-primary" />
-                <span className="text-sm font-medium">Global Construction Partner</span>
+                <span className="text-sm font-medium text-foreground">Global Construction Partner</span>
               </motion.div>
               
               {/* Logo and Company Name */}
-              <div className="flex items-center justify-center lg:justify-start mb-6 lg:mb-8">
-                <motion.div 
-                  className="relative w-16 h-16 sm:w-20 sm:h-20 mr-3 sm:mr-4"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <div className="absolute inset-0 gradient-primary rounded-xl shadow-glow" />
-                  <div className="relative flex items-center justify-center h-full text-white font-bold text-2xl sm:text-3xl">
-                    C
-                  </div>
-                </motion.div>
-                <div>
-                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground text-shimmer">
-                    {t('companyName')}
-                  </h1>
-                  <p className="text-xs sm:text-sm text-muted-foreground">
-                    Global Construction Solutions
-                  </p>
-                </div>
+              <div className="flex justify-center lg:justify-start mb-6 lg:mb-8">
+                <HeroLogo />
               </div>
               
               {/* Main Tagline */}
@@ -149,8 +153,8 @@ export function HeroSection() {
                 transition={{ duration: 0.8, delay: 0.3 }}
                 className="space-y-4"
               >
-                <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
-                  <span className="block gradient-primary bg-clip-text text-transparent">
+                <h2 className="text-hierarchy-1">
+                  <span className="block text-gold-gradient">
                     Smarter Tools,
                   </span>
                   <span className="block text-foreground">
@@ -181,7 +185,11 @@ export function HeroSection() {
               >
                 <Button 
                   size="lg"
-                  className="magnetic-button gradient-primary text-white font-semibold px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg rounded-xl shadow-elevation-3 hover:shadow-glow w-full sm:w-auto"
+                  className="magnetic-button text-white font-semibold px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg rounded-xl shadow-elevation-3 w-full sm:w-auto"
+                  style={{
+                    background: `linear-gradient(135deg, #f4d03f 0%, #ffed4e 35%, #ffd942 70%, #d4af37 100%)`,
+                    boxShadow: `0 10px 30px rgba(255, 237, 78, 0.3), 0 4px 15px rgba(244, 208, 63, 0.2)`
+                  }}
                 >
                   {t('learnMore')}
                   <ArrowRight className="ml-2 h-4 sm:h-5 w-4 sm:w-5 transition-transform group-hover:translate-x-1" />
@@ -190,7 +198,11 @@ export function HeroSection() {
                 <Button 
                   variant="outline"
                   size="lg"
-                  className="glass-effect border-primary/30 text-foreground hover:bg-primary/10 px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg rounded-xl font-semibold group w-full sm:w-auto"
+                  className="glass-effect text-foreground px-6 sm:px-8 py-4 sm:py-6 text-base sm:text-lg rounded-xl font-semibold group w-full sm:w-auto hover:shadow-glow transition-all duration-300"
+                  style={{
+                    border: `1px solid rgba(255, 237, 78, 0.3)`,
+                    background: `linear-gradient(135deg, rgba(255, 237, 78, 0.05), rgba(244, 208, 63, 0.02))`
+                  }}
                 >
                   <Play className="mr-2 h-4 sm:h-5 w-4 sm:w-5 transition-transform group-hover:scale-110" />
                   {t('watchVideo')}
@@ -205,15 +217,15 @@ export function HeroSection() {
                 className="flex items-center justify-center lg:justify-start gap-8 pt-8"
               >
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">300+</div>
+                  <div className="text-2xl font-bold text-gold-gradient">300+</div>
                   <div className="text-sm text-muted-foreground">Products</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">6</div>
+                  <div className="text-2xl font-bold text-gold-gradient">6</div>
                   <div className="text-sm text-muted-foreground">Countries</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-primary">10</div>
+                  <div className="text-2xl font-bold text-gold-gradient">10</div>
                   <div className="text-sm text-muted-foreground">Years</div>
                 </div>
               </motion.div>
